@@ -7,9 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.server.WebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +40,7 @@ public class KeycloakCustomizing {
 
 
     @Bean
-    public EmbeddedServletContainerCustomizer getContainerCustomizer() {
+    public WebServerFactoryCustomizer<WebServerFactory> getContainerCustomizer() {
         // komplex : mit AutoConfigureBefore erreicht man das diese Configuration (normalerweise) vor der KeycloakAutoConfiguration geladen wird
         // das reicht allerdings nicht aus, es muss auch ein EmbeddedServletContainerCustomizer erzeugt werden da der Container vor den restlichen durch Configure-Beans erzeugt wird
         // d.h. damit waere der KeycloakAutoConfiguration.EmbeddedServletContainerCustomizer wieder vor dieser Configuration
