@@ -14,7 +14,7 @@ public class SampleBase {
 
     public static String resolveTokenEndpoint() {
         return String.format("%s/realms/%s/protocol/openid-connect/token",
-                "http://keycloak1:8080/auth",
+                "http://localhost:18080/auth",
                 "api-gateway");
     }
 
