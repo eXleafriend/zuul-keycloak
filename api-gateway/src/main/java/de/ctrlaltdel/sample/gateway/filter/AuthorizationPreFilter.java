@@ -16,7 +16,7 @@ import java.security.Principal;
  * This filter goes on only if an authentificated user is available (Filterchain.doFilter)
  */
 @Component
-public class AuthorizationPreFilter extends KeycloakFilter {
+public class AuthorizationPreFilter extends ZuulPreFilter {
 
     private KeycloakServletFilter keycloakServletFilter;
 
@@ -26,18 +26,13 @@ public class AuthorizationPreFilter extends KeycloakFilter {
     }
 
     @Override
-    protected boolean isPreFilter() {
-        return true;
-    }
-
-    @Override
     public int filterOrder() {
         return Integer.MIN_VALUE;
     }
 
     @Override
     public boolean shouldFilter() {
-        return getUserPrincipal() == null;
+        return Utils.getUserPrincipal() == null;
     }
 
     @Override
@@ -55,7 +50,7 @@ public class AuthorizationPreFilter extends KeycloakFilter {
             throw new IllegalStateException(e);
         }
 
-        context.setSendZuulResponse(getUserPrincipal() != null);
+        context.setSendZuulResponse(Utils.getUserPrincipal() != null);
 
         return null;
     }

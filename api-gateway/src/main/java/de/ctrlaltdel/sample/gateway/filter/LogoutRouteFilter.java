@@ -1,6 +1,16 @@
 package de.ctrlaltdel.sample.gateway.filter;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.time.Instant;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.netflix.zuul.context.RequestContext;
+
+import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
@@ -8,18 +18,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.time.Instant;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * LogoutRouteFilter
  */
 @Component
-public class LogoutRouteFilter extends KeycloakFilter {
+public class LogoutRouteFilter extends ZuulRouteFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogoutRouteFilter.class);
 
@@ -27,8 +30,13 @@ public class LogoutRouteFilter extends KeycloakFilter {
     private static final Map<String, Instant> INVALID_KEYS = new ConcurrentHashMap<>();
 
     @Override
-    protected boolean isRouteFilter() {
-        return true;
+    public int filterOrder() {
+        return Utils.FILTER_ORDER;
+    }
+
+    @Override
+    public boolean shouldFilter() {
+        return Utils.shouldFilter();
     }
 
     @Override

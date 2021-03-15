@@ -7,21 +7,21 @@ import org.springframework.stereotype.Component;
  * Returns the bearer to the client as Authorization-Header
  */
 @Component
-public class BearerPostFilter extends KeycloakFilter {
+public class BearerPostFilter extends ZuulPostFilter {
 
     @Override
-    protected boolean isPostFilter() {
-        return true;
+    public int filterOrder() {
+        return Utils.FILTER_ORDER;
     }
 
     @Override
     public boolean shouldFilter() {
-        return super.shouldFilter() && !getResponse().containsHeader(AUTHORIZATION);
+        return Utils.shouldFilter() && !Utils.getResponse().containsHeader(Utils.AUTHORIZATION);
     }
 
     @Override
     public Object run() {
-        getResponse().addHeader(AUTHORIZATION, extractBearer());
+        Utils.getResponse().addHeader(Utils.AUTHORIZATION, Utils.extractBearer());
         return null;
     }
 }

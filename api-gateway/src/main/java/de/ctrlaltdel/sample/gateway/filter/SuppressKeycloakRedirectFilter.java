@@ -12,14 +12,14 @@ import java.util.List;
  * SuppressKeycloakRedirectFilter
  */
 @Component
-public class SuppressKeycloakRedirectFilter extends KeycloakFilter {
+public class SuppressKeycloakRedirectFilter extends ZuulPostFilter {
 
     @Value("${keycloak.auth-server-url}")
     private String keyCloakUrl;
 
     @Override
-    protected boolean isPostFilter() {
-        return true;
+    public int filterOrder() {
+        return Utils.FILTER_ORDER;
     }
 
     @Override
@@ -30,7 +30,6 @@ public class SuppressKeycloakRedirectFilter extends KeycloakFilter {
     @Override
     public Object run() {
         RequestContext context = RequestContext.getCurrentContext();
-        HttpServletResponse response = getResponse();
         int status = context.getResponseStatusCode();
 
         List<Pair<String, String>> pairs = context.getZuulResponseHeaders();
